@@ -1,0 +1,65 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model IncomeReport {
+  artistProfile  String?
+  commissionPaid Float?
+  createdAt      DateTime  @default(now())
+  id             String    @id @default(cuid())
+  month          DateTime?
+  totalIncome    Float?
+  transactions   Json?
+  updatedAt      DateTime  @updatedAt
+}
+
+model Withdrawal {
+  amount        Float?
+  artistProfile String?
+  createdAt     DateTime  @default(now())
+  date          DateTime?
+  id            String    @id @default(cuid())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Commission {
+  amount        Float?
+  artistProfile String?
+  booking       String?
+  createdAt     DateTime  @default(now())
+  date          DateTime?
+  id            String    @id @default(cuid())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Payment {
+  amount        Float?
+  artistProfile String?
+  clientProfile String?
+  createdAt     DateTime           @default(now())
+  date          DateTime?
+  id            String             @id @default(cuid())
+  status        EnumPaymentStatus?
+  updatedAt     DateTime           @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+enum EnumPaymentStatus {
+  Option1
+}
