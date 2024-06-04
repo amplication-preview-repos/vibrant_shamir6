@@ -1,0 +1,57 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model InviteCode {
+  artistProfiles ArtistProfile[]
+  code           String?
+  createdAt      DateTime        @default(now())
+  id             String          @id @default(cuid())
+  updatedAt      DateTime        @updatedAt
+  valid          Boolean?
+}
+
+model ArtistProfile {
+  bio            String?
+  commissionRate Float?
+  createdAt      DateTime    @default(now())
+  id             String      @id @default(cuid())
+  inviteCode     InviteCode? @relation(fields: [inviteCodeId], references: [id])
+  inviteCodeId   String?
+  location       String?
+  priceRange     Float?
+  updatedAt      DateTime    @updatedAt
+  user           User?       @relation(fields: [userId], references: [id])
+  userId         String?
+  workPortfolio  Json?
+}
+
+model ClientProfile {
+  createdAt       DateTime @default(now())
+  id              String   @id @default(cuid())
+  location        String?
+  moodboard       Json?
+  preferredStyles String?
+  updatedAt       DateTime @updatedAt
+  user            User?    @relation(fields: [userId], references: [id])
+  userId          String?
+}
+
+model User {
+  artistProfiles ArtistProfile[]
+  clientProfiles ClientProfile[]
+  createdAt      DateTime        @default(now())
+  email          String?         @unique
+  firstName      String?
+  id             String          @id @default(cuid())
+  lastName       String?
+  password       String
+  roles          Json
+  updatedAt      DateTime        @updatedAt
+  username       String          @unique
+}
